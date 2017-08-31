@@ -1,0 +1,2 @@
+mkdir: no se puede crear el directorio «TRAINING/SOLVER_SR[5,10].prototxt»: No existe el fichero o el directorio
+/var/spool/slurmd/job746008/slurm_script: línea 12: TRAINING/SOLVER_SR[5,10].prototxt/5-SOLVER_SR[5,10].prototxt.log: No existe el fichero o el directorio

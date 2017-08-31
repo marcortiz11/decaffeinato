@@ -1,0 +1,236 @@
+ 
+# The train/test net protocol buffer definition
+net_param {
+    name: "LeNet"
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "data/mnist_train_lmdb"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "data/mnist_test_lmdb"
+    batch_size: 1
+    backend: LMDB
+  }
+}
+
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "data"
+  top: "ip1"
+  layer_id: 1
+  offset : 0
+  inner_product_param {
+    num_output: 1000
+    weight_filler {
+      type : "gaussian"
+      mean : 0
+      std : 0.01
+    }
+  }
+   bias_param{
+    filler{
+        value:0
+    }
+  }
+  fixed_precision : true
+  precision{
+    enter : 2
+    fraccio : 14
+    rounding: "stochastic"
+  }
+}
+
+
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+  fixed_precision : true
+  precision{
+    enter : 2
+    fraccio : 14
+    rounding: "stochastic"
+  }
+}
+
+
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "ip2"
+  layer_id:2 
+  offset: 1000
+  inner_product_param {
+    num_output: 1000
+    weight_filler {
+      type : "gaussian"
+      mean : 0
+      std : 0.01
+    }
+  }
+  bias_param{
+    filler{
+        value:0
+    }
+  }
+  fixed_precision : true
+  precision{
+    enter : 2
+    fraccio : 14
+    rounding: "stochastic"
+  }
+}
+
+
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "ip2"
+  top: "ip2"
+  fixed_precision : true
+   bias_param{
+    filler{
+        value:0
+    }
+  }
+  precision{
+    enter : 2
+    fraccio : 14
+    rounding: "stochastic"
+  }
+}
+
+
+layer {
+  name: "ip3"
+  type: "InnerProduct"
+  bottom: "ip2"
+  top: "ip3"
+  layer_id: 3
+  offset: 2000
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type : "gaussian"
+      mean : 0
+      std : 0.01
+    }
+  }
+   bias_param{
+    filler{
+        value:0
+    }
+  }
+  fixed_precision : true
+  precision{
+    enter : 2
+    fraccio : 14
+    rounding: "stochastic"
+  }
+}
+
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "ip3"
+  bottom: "label"
+  top: "accuracy"
+}
+
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip3"
+  bottom: "label"
+  top: "loss"
+  fixed_precision : true
+  precision{
+    enter : 2
+    fraccio : 14
+    rounding: "stochastic"
+  }
+}
+
+}
+
+
+############################ SOLVER PARAMS ###############################
+###########################################################################
+
+
+# Precision of weight updates
+fixed_precision : true
+precision{
+    enter : 2
+    fraccio : 14
+    rounding: "stochastic"
+}
+
+# test_iter specifies how many forward passes the test should carry out.
+# In the case of MNIST, we have test batch size 100 and 100 test iterations,
+# covering the full 10,000 testing images.
+test_iter: 1
+
+
+# Carry out testing every 500 training iterations.
+test_interval: 600
+
+
+
+# The base learning rate, momentum and the weight decay of the network.
+base_lr: 0.1
+momentum: 0.9
+
+
+
+# The learning rate policy
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+
+
+
+# Display every 600 iterations
+display: 600    # 60.000/100 = 600 -> 1 Epoch
+
+
+
+# The maximum number of iterations
+max_iter: 10 # Per fer debug
+
+
+
+# snapshot intermediate results
+#snapshot: 12000  #A la meitat guardem l'estat de la xarxa
+#snapshot_prefix: "."
+
+
+# solver mode: CPU or GPU
+solver_mode: CPU

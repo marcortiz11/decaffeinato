@@ -1,0 +1,14 @@
+1- Explicacio experiment WP i entendre
+2- Preparar experiments amb FLOAT 8 bits
+	2.1- Entrenar 8 bits fins a 5 iteraciio i despres mes bits
+	2.2- Entrenar 8 bits tota l'estona i aconseguir un bon entrenament.
+	2.3- Entrenar 8 bits maxima iteracio i despres 16.
+3- Entrenar exemple CIFAR10
+4- Arrodonir CIFAR sense convolutional parameters arrodonits.
+	4.1- Entrenar cada cop i no arrodonir convolutional
+	4.2- Tenir part convolutional entrenada -> caffemodel.
+	4.3- Comparar tots els metodes arrodoniment.
+5- Preparar script millorat per execucio paralela
+6- (Dijous) Prepara presentacio
+7- Documentacio experiment
+
